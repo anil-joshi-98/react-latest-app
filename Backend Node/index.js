@@ -23,8 +23,9 @@ var mysqlConnection = mysql.createConnection({
   multipleStatements: true
 });
 
+//To get student details from the Database
 app.get('/',async(req,res)=>{
-  await mysqlConnection.query('select * from studentdetails',(err,rows,fields)=>{
+  mysqlConnection.query('select * from studentdetails',(err,rows,fields)=>{
     if(!err){
       console.log(rows);
       res.send(rows);
@@ -32,6 +33,7 @@ app.get('/',async(req,res)=>{
   })
 })
 
+//To delete a student detail from the Database
 app.delete('/:id',(req,res)=>{
   const id=req.params.id;
   mysqlConnection.query(`delete from studentdetails where rollno=${id}`,(err,rows,fields)=>{
@@ -45,7 +47,7 @@ app.delete('/:id',(req,res)=>{
   });
 })
 
-
+//To find a student detail from the Database from roll number
 app.get('/getResult/:id/:name',(req,res)=>{
   mysqlConnection.query(`select * from studentdetails where rollno=${req.params.id} and name='${req.params.name}'`,(err,rows,field)=>{
     if(rows.length>0){
@@ -58,7 +60,9 @@ app.get('/getResult/:id/:name',(req,res)=>{
   })
 })
 
+//To add a student detail in the Database
 app.post('/addResult',(req,res)=>{
+  console.log(req.body);
   mysqlConnection.query(`insert into studentdetails values (${req.body.rollno},'${req.body.name}','${req.body.dob}',${req.body.score})`),(err,rows,field)=>{
     if(!err){
       console.log('added successfully');
@@ -69,6 +73,7 @@ app.post('/addResult',(req,res)=>{
   }
 });
 
+//To update a student detail in the Database
 app.patch('/edit/:id',(req,res)=>{
   mysqlConnection.query(`update studentdetails set name='${req.body.name}' , dob='${req.body.dob}' , score=${req.body.score} where rollno=${req.params.id}`,(err,rows,field)=>{
     if(!err){
